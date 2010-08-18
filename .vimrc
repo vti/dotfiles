@@ -107,10 +107,9 @@ nnoremap <silent> <Leader>yr :YRShow<CR>
 let g:gist_clip_command = 'pbcopy'
 let g:gist_put_url_to_clipboard_after_post = 1
 
-set runtimepath=~/.vim-dotfiles,~/.vim,$VIMRUNTIME
+set runtimepath=~/.vim-dotfiles/,~/.vim-dotfiles/after,~/.vim,$VIMRUNTIME
 
 "For local customization
-"so "~/.vimrcX"
 if filereadable(expand("<sfile>") . "X")
     source <sfile>X
 endif
