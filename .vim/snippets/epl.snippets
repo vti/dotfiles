@@ -1,0 +1,44 @@
+snippet <%
+	<% ${1} %>
+snippet <%=
+	<%= ${1} %>
+# Inline Perl
+snippet ip
+	<% ${1} %>
+# Perl expression
+snippet pe
+	<%= ${1} %>
+# Perl expression escaped
+snippet pee
+	<%== ${1} %>
+# Comment
+snippet c
+	<%# ${1} %>
+# Block
+snippet bl
+	<% my $${1} = {%>
+		${2:}
+	<%}%>
+# Form
+snippet f
+	<%= form_for '${1}' => {%>
+		${2}
+	<%}%>
+# Label
+snippet la
+	<%= label '${1}' => {%>${2}<%}%>
+# Input
+snippet in
+	<%= input '${1}' %>
+# Password
+snippet inp
+	<%= input '${1}', type => 'password' %>
+# Submit
+snippet su
+	<%= input 'submit', type => 'submit', value => '${1}' %>
+# Link to
+snippet l
+	<%= link_to '${1}' => {%>${2}<%}%>
+# Image
+snippet im
+	<%= img '${1}' %>

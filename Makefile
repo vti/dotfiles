@@ -1,7 +1,8 @@
-install: vim zsh
+all: vim zsh
 
 vim:
 	$(call backup, ~/.vimrc) && ln -s $(PWD)/.vimrc ~/
+	rm -f ~/.vim-dotfiles && ln -s $(PWD)/.vim ~/.vim-dotfiles
 	touch ~/.vimrcX
 
 zsh:
