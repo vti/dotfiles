@@ -1,13 +1,23 @@
 all: vim zsh
 
 vim:
-	$(call backup, ~/.vimrc) && ln -s $(PWD)/.vimrc ~/
+	$(call safeln,.vimrc,~/.vimrc)
 	rm -f ~/.vim-dotfiles && ln -s $(PWD)/.vim ~/.vim-dotfiles
 	touch ~/.vimrcX
 
 zsh:
-	$(call backup, ~/.zshrc) && ln -s $(PWD)/.zshrc ~/
+	$(call safeln,.zshrc,~/.zshrc)
 	touch ~/.zshrcX
 
-backup = \
-	if [ -e $(1) ]; then mv $(1) $(addsuffix .bak,$(1)); fi
+safeln = \
+	$(call saferm,$(2));   \
+	ln -s $(PWD)/$(1) $(2)
+
+saferm =                                    \
+	if [ -L $(1) ]; then                    \
+		rm $(1);                            \
+	else                                    \
+		if [ -e $(1) ]; then                \
+			mv $(1) $(addsuffix .bak,$(1)); \
+		fi                                  \
+	fi
