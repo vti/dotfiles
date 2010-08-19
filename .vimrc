@@ -93,7 +93,7 @@ let g:openssl_backup = 1
 let NERDShutUp=1
 
 "NERDTree
-let NERDTreeIgnore=['\.o$', '^moc_', '\.ui$']
+let NERDTreeIgnore=['\.o$', '\.lo$', '\.la$', '\.in$', '^moc_', '\.ui$']
 nnoremap <silent> ,nt :NERDTree<CR>
 
 "taglist
