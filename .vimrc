@@ -94,7 +94,7 @@ let NERDShutUp=1
 
 "NERDTree
 let NERDTreeIgnore=['\.o$', '\.lo$', '\.la$', '\.in$', '^moc_', '\.ui$']
-nnoremap <silent> ,nt :NERDTree<CR>
+nnoremap <silent> ,nt :NERDTreeToggle<CR>
 
 "taglist
 let g:buftabs_only_basename=1 
