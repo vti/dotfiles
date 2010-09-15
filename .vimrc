@@ -1,5 +1,7 @@
 set nocompatible
 
+"call pathogen#runtime_append_all_bundles()
+
 set autoindent
 set smartindent
 set smarttab
@@ -18,6 +20,8 @@ set incsearch
 set ignorecase
 set smartcase
 
+set hidden
+
 set tf
 
 syntax on
@@ -26,11 +30,10 @@ set nu
 set background=dark
 colorscheme desert
 
+let mapleader = ","
+
 "set mouse=a
 "set clipboard=unnamed,exclude:cons\\\|linux
-
-"setlocal list
-"setlocal listchars=tab:\ ,trail:<c2><b7>
 
 "set listchars+=precedes:<,extends:>     
 set browsedir  =current   
