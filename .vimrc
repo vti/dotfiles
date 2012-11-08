@@ -1,6 +1,22 @@
 set nocompatible
+filetype off                   " required!
 
-call pathogen#runtime_append_all_bundles()
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" required!
+Bundle 'gmarik/vundle'
+
+Bundle 'openssl.vim'
+Bundle 'YankRing.vim'
+
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'thinca/vim-localrc'
+Bundle 'kien/ctrlp.vim'
+Bundle 'msanders/snipmate.vim'
+Bundle 'vti/snipmate-snippets-perl'
+
+filetype plugin indent on     " required!
 
 set modelines=0
 
@@ -101,7 +117,7 @@ let perl_extended_vars = 1    "highlight complex expressions such as @{[$x, $y]}
 let perl_sync_dist     = 250  "use more context for highlighting"
 
 set path+=$PWD/lib
-set includeexpr=substitute(substitute(v:fname,'::','/','g'),'$','.pm','')
+"set includeexpr=substitute(substitute(v:fname,'::','/','g'),'$','.pm','')
 
 " Tidy selected lines (or entire file) with ,pt
 nnoremap <silent> ,pt :%!perltidy -q<cr>
@@ -153,3 +169,5 @@ nnoremap <silent> <leader>m :CtrlPMRU<cr>
 "nnoremap <silent> <leader>y :YRToggle<cr>
 nnoremap <silent> <leader>y :YRShow<cr>
 let g:yankring_manual_clipboard_check = 1
+
+let g:syntastic_perl_lib_path = './lib'
