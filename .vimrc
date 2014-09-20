@@ -9,7 +9,7 @@ set nocompatible
     call vundle#begin()
 
     " required!
-    Plugin 'gmarik/vundle'
+    Plugin 'gmarik/Vundle.vim'
 
     Plugin 'openssl.vim'
     Plugin 'YankRing.vim'
@@ -30,6 +30,8 @@ set nocompatible
     Plugin 'bling/vim-airline'
     Plugin 'tpope/vim-fugitive'
     Plugin 'mbbill/undotree'
+    Plugin 'kshenoy/vim-signature'
+    Plugin 'justinmk/vim-sneak'
 
     call vundle#end()
 
@@ -208,6 +210,8 @@ autocmd! BufWritePost $MYVIMRC source %
 
     " Airline {
         let g:airline#extensions#tabline#enabled = 1
+        "let g:airline_powerline_fonts = 1
+        "let g:airline_theme='monochrome'
     " }
 
     " UndoTree {
