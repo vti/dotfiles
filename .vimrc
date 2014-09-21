@@ -33,6 +33,8 @@ set nocompatible
     Plugin 'kshenoy/vim-signature'
     Plugin 'justinmk/vim-sneak'
 
+    Plugin 'bufkill.vim'
+
     call vundle#end()
 
     filetype plugin indent on     " required!
