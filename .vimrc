@@ -11,21 +11,23 @@ set nocompatible
     " required!
     Plugin 'gmarik/Vundle.vim'
 
+    Plugin 'altercation/vim-colors-solarized'
+
     Plugin 'openssl.vim'
     Plugin 'YankRing.vim'
 
     Plugin 'bogado/file-line'
     Plugin 'scrooloose/nerdcommenter'
     Plugin 'scrooloose/nerdtree'
-    "Plugin 'thinca/vim-localrc'
     Plugin 'kien/ctrlp.vim'
     Plugin 'msanders/snipmate.vim'
     Plugin 'vti/snipmate-snippets-perl'
+    "Plugin 'majutsushi/tagbar'
+    "Plugin 'mileszs/ack.vim'
 
-    "Plugin 'buftabs'
     Plugin 'VisIncr'
 
-    Plugin 'vimwiki/vimwiki'
+    "Plugin 'vimwiki/vimwiki'
 
     Plugin 'bling/vim-airline'
     Plugin 'tpope/vim-fugitive'
@@ -33,7 +35,14 @@ set nocompatible
     Plugin 'kshenoy/vim-signature'
     Plugin 'justinmk/vim-sneak'
 
+    Plugin 'moll/vim-bbye'
     Plugin 'bufkill.vim'
+    "Plugin 'c9s/perlomni.vim'
+    "Plugin 'cespare/vim-toml'
+    "Plugin 'LargeFile'
+
+    Plugin 'mileszs/ack.vim'
+    Plugin 'vim-perl/vim-perl'
 
     call vundle#end()
 
@@ -52,12 +61,12 @@ set linebreak
 set tabstop    =4
 set shiftwidth =4
 set expandtab
-set textwidth  =80
+set textwidth  =120
 set formatoptions=qrn1
 
 "set colorcolumn=85
 highlight ColorColumn ctermbg=magenta
-call matchadd('ColorColumn', '\%81v', 100)
+call matchadd('ColorColumn', '\%121v', 120)
 
 set showmatch
 
@@ -87,9 +96,9 @@ set number
 
 set t_Co=256
 
-set background=light
-"let g:solarized_termcolors=256
-"colorscheme solarized
+set background=dark
+let g:solarized_termcolors=256
+colorscheme solarized
 
 " Use SHIFT to switch back to mouse selection
 set mouse=a
@@ -145,8 +154,6 @@ autocmd! BufWritePost $MYVIMRC source %
     " easily switch between buffers
     nmap <C-l> :bn<CR>
     nmap <C-h> :bp<CR>
-
-    nmap <leader>bd :bd<CR>
 " }
 
 " Filetype specific {
@@ -161,17 +168,76 @@ autocmd! BufWritePost $MYVIMRC source %
         set includeexpr=substitute(substitute(v:fname,'::','/','g'),'$','.pm','')
 
         " Tidy selected lines (or entire file) with ,pt
-        nnoremap <silent> ,pt :%!perltidy -q<cr>
-        vnoremap <silent> ,pt :!perltidy -q<cr>
+        nnoremap <silent> <leader>pt :%!perltidy -q<cr>
+        vnoremap <silent> <leader>pt :!perltidy -q<cr>
+
+        function! Alternative ()
+            let l:file = @%
+
+            if l:file == "t/*.t" || l:file =~ "\.t$"
+                let l:file = substitute(l:file, "\.t$", ".pm", "")
+                let l:file = substitute(l:file, "^t/", "lib/", "")
+
+                "let l:parts = split(l:file, '/');
+                "for part in l:parts
+                    "part = substitute(part, '\(.*\)', '\L\1', '')
+                "endfor
+                "let l:file = join(l:parts, '/');
+
+                "let l:file = substitute(l:file, '\(\%(\<\l\+\)\%(_\)\@=\)\|_\(\l\)', '\u\1\2', "g")
+                let l:file = substitute(l:file, '_\([a-z]\)', '\u\1', "")
+            else
+                let l:file = substitute(l:file, "\.pm$", ".t", "")
+                let l:file = substitute(l:file, "^lib/", "t/", "")
+                "let l:file = substitute(l:file, "\\(.*\\)", "\\L\\1", "")
+                "let l:file = substitute(l:file, '\(\<\u\l\+\|\l\+\)\(\u\)', '\l\1_\l\2', "g")
+                let l:file = substitute(l:file, '\(.*\)', '\L\1', "g")
+            endif
+
+            return l:file
+        endfunction
+
+        " Test
+        function! Prove ()
+            let l:file = @%
+
+            if l:file == "t/*.t" || l:file =~ "\.t$"
+            else
+                let l:file = Alternative()
+            endif
+
+            if !filereadable(l:file)
+                echoerr "File '" . l:file . "' does not exist"
+            else
+                let l:params = "l"
+                execute "!prove -" . l:params . " " . l:file
+            endif
+        endfunction
+
+        " Switch between .pm and .t
+        function! OpenAlternative ()
+            let l:file = Alternative()
+
+            if !filereadable(l:file)
+                echoerr "File '" . l:file . "' does not exist"
+            else
+                execute ":e " . fnameescape(l:file)
+            endif
+        endfunction
+
+        nnoremap <leader>rt :call Prove()<cr>
+        nnoremap <leader>ga :call OpenAlternative()<cr>
 
         " Deparse
         vnoremap <silent> <leader>d :!perl -MO=Deparse 2>/dev/null<CR>
+
+        let perl_sub_signatures = 1
     " }
 
     " Go {
         au BufRead,BufNewFile *.go setfiletype go
-        nnoremap <silent> ,gt :%!goimports <cr>
-        vnoremap <silent> ,gt :!goimports <cr>
+        nnoremap <silent> <leader>gt :%!goimports <cr>
+        vnoremap <silent> <leader>gt :!goimports <cr>
     " }
 " }
 
@@ -186,8 +252,9 @@ autocmd! BufWritePost $MYVIMRC source %
 
     " NERDTree {
         let NERDTreeIgnore=['\.o$', '\.lo$', '\.la$', '\.in$', '^moc_', '\.ui$']
-        let NERDTreeShowLineNumbers=1
-        nnoremap <silent> ,nt :NERDTreeToggle<CR><C-W>w
+        let NERDTreeShowLineNumbers=0
+        nnoremap <silent> <leader>nt :NERDTreeToggle<CR><C-W>w
+        nnoremap <silent> <leader>nf :NERDTreeFind<CR><C-W>w
     " }
 
     " visincr {
@@ -195,8 +262,10 @@ autocmd! BufWritePost $MYVIMRC source %
     " }
 
     " ctrlp {
-        set wildignore+=*/.git/*,*/.hg/*,*/.svn/*
+        set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/cover_db/*,*/local/*
         let g:ctrlp_working_path_mode = 0
+
+        nnoremap <silent> <C-M> :CtrlPMRU<CR>
     " }
 
     " Yankring {
@@ -206,8 +275,8 @@ autocmd! BufWritePost $MYVIMRC source %
 
     " Vimwiki {
         let g:vimwiki_list = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.markdown'}]
-        au! BufRead ~/vimwiki/index.markdown :silent execute "!git pull" | redraw!
-        au! BufWritePost ~/vimwiki/* silent execute '!git add .;git commit -m "Auto commit + push.";git push' | redraw!
+        au! BufRead ~/vimwiki/index.markdown :silent execute "!git -C ~/vimwiki/pull" | redraw!
+        au! BufWritePost ~/vimwiki/* silent execute '!git -C ~/vimwiki/ add .;git -C ~/vimwiki/ commit -m "Auto commit + push.";git -C ~/vimwiki/ push' | redraw!
     " }
 
     " Airline {
@@ -217,13 +286,23 @@ autocmd! BufWritePost $MYVIMRC source %
     " }
 
     " UndoTree {
-        nnoremap <silent> ,ut :UndotreeToggle <cr>
+        nnoremap <silent> <leader>ut :UndotreeToggle <cr>
         let g:undotree_SetFocusWhenToggle=1
+    " }
+
+    " Ack {
+        nnoremap <leader>a :Ack 
+    " }
+
+    " Bbye {
+        nnoremap <leader>bd :Bdelete<CR>
     " }
 " }
 
 " Local settings {
-    if filereadable(expand("~/.vimrc.local"))
-        source ~/.vimrc.local
+    if filereadable(expand(".vimrc.local"))
+        source .vimrc.local
     endif
 " }
+
+nnoremap <silent> ,tr :%!tr <cr>
